@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dask Futures Monitor</title>
+  </head>
+  <body>
+    <h1>Dask Futures Monitor</h1>
+    <ul>
+      {% for s in status %}
+        <li>{{ s }} <a href="/restart?future={{ loop.index
