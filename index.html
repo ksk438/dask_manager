@@ -2,9 +2,66 @@
 <html>
   <head>
     <title>Dask Futures Monitor</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid #ddd;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      .status {
+        display: inline-block;
+      }
+      .buttons {
+        display: inline-block;
+        margin-left: 10px;
+      }
+      .error-message {
+        font-weight: bold;
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <h1>Dask Futures Monitor</h1>
-    <ul>
-      {% for s in status %}
-        <li>{{ s }} <a href="/restart?future={{ loop.index
+    <table>
+      <tr>
+        <th>Future</th>
+        <th>Status</th>
+        <th>Error Message</th>
+        <th>Actions</th>
+      </tr>
+      {% for i, s, e in status %}
+        <tr>
+          <td>{{ i }}</td>
+          <td>
+            <span class="status">{{ s }}</span>
+          </td>
+          <td>
+            {% if s == 'error' %}
+              <span class="error-message">{{ e }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if s == 'running' or s == 'pending' %}
+              <form method="get" action="/restart">
+                <input type="hidden" name="future" value="{{ i }}">
+                <button type="submit">Restart</button>
+              </form>
+              <form method="get" action="/kill">
+                <input type="hidden" name="future" value="{{ i }}">
+                <button type="submit">Kill</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
